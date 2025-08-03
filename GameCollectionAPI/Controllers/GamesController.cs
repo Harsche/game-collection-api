@@ -1,4 +1,5 @@
 using GameCollectionAPI.Data;
+using GameCollectionAPI.DTOs;
 using GameCollectionAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,9 @@ namespace GameCollectionAPI.Controllers
         /// <returns>List of games.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IEnumerable<Game>> Get() => await _dbContext.Games.ToListAsync();
+        public async Task<IEnumerable<GameReadDto>> Get() => await _dbContext.Games
+            .Select(game => game.ToReadDto())
+            .ToListAsync();
 
         /// <summary>
         /// Gets a specific game by its ID.
@@ -41,24 +44,26 @@ namespace GameCollectionAPI.Controllers
 
             if (game == null) { return NotFound(); }
 
-            return Ok(game);
+            return Ok(game.ToReadDto());
         }
 
         /// <summary>
         /// Adds a new game to the collection.
         /// </summary>
-        /// <param name="game">Game object to add.</param>
+        /// <param name="createdGame">Game object to add.</param>
         /// <returns>The created game.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(Game game)
+        public async Task<IActionResult> Post([FromBody] GameCreateDto createdGame)
         {
-            if (game == null) { return BadRequest(); }
+            if (createdGame == null) { return BadRequest(); }
 
+            var game = Game.FromCreateDto(createdGame);
             _dbContext.Games.Add(game);
             await _dbContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = game.Id }, game);
+
+            return CreatedAtAction(nameof(Get), new { id = game.Id }, game.ToReadDto());
         }
 
         /// <summary>
@@ -71,7 +76,7 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, Game updatedGame)
+        public async Task<IActionResult> Put(int id, [FromBody] GameCreateDto updatedGame)
         {
             if (id <= 0 || updatedGame == null) { return BadRequest(); }
 
@@ -79,13 +84,7 @@ namespace GameCollectionAPI.Controllers
 
             if (game == null) { return NotFound(); }
 
-            game.Name = updatedGame.Name;
-            game.Genre = updatedGame.Genre;
-            game.Developer = updatedGame.Developer;
-            game.Publisher = updatedGame.Publisher;
-            game.ReleaseDate = updatedGame.ReleaseDate;
-            game.Platform = updatedGame.Platform;
-
+            game.UpdateFromDto(updatedGame);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
