@@ -16,11 +16,19 @@ namespace GameCollectionAPI.Controllers
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Gets all games in the collection.
+        /// </summary>
+        /// <returns>List of games.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IEnumerable<Game>> Get() => await _dbContext.Games.ToListAsync();
 
-
+        /// <summary>
+        /// Gets a specific game by its ID.
+        /// </summary>
+        /// <param name="id">Game ID.</param>
+        /// <returns>The requested game.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -36,6 +44,11 @@ namespace GameCollectionAPI.Controllers
             return Ok(game);
         }
 
+        /// <summary>
+        /// Adds a new game to the collection.
+        /// </summary>
+        /// <param name="game">Game object to add.</param>
+        /// <returns>The created game.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -48,6 +61,12 @@ namespace GameCollectionAPI.Controllers
             return CreatedAtAction(nameof(Get), new { id = game.Id }, game);
         }
 
+        /// <summary>
+        /// Updates an existing game.
+        /// </summary>
+        /// <param name="id">Game ID.</param>
+        /// <param name="updatedGame">Updated game object.</param>
+        /// <returns>No content.</returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,6 +91,11 @@ namespace GameCollectionAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a game by its ID.
+        /// </summary>
+        /// <param name="id">Game ID.</param>
+        /// <returns>No content.</returns>
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,7 +103,7 @@ namespace GameCollectionAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) { return BadRequest(); }
-            
+
             var game = await _dbContext.Games.FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null) { return NotFound(); }
