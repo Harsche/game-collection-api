@@ -1,4 +1,5 @@
 using GameCollectionAPI.Data;
+using GameCollectionAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("GameList");
 builder.Services.AddSqlite<AppDbContext>(connectionString);
+
+builder.Services.AddScoped<IGameRepository, GameRepository>();
 
 var app = builder.Build();
 
