@@ -1,4 +1,4 @@
-using GameCollectionAPI.DTOs;
+using GameCollectionAPI.DTOs.Games;
 
 namespace GameCollectionAPI.Models;
 

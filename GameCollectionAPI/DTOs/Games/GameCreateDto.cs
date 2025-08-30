@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GameCollectionAPI.DTOs;
+namespace GameCollectionAPI.DTOs.Games;
 
 public class GameCreateDto
 {

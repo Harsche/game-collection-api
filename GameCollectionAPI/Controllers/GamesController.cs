@@ -1,4 +1,4 @@
-using GameCollectionAPI.DTOs;
+using GameCollectionAPI.DTOs.Games;
 using GameCollectionAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 

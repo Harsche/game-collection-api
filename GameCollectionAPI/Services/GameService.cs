@@ -1,4 +1,4 @@
-using GameCollectionAPI.DTOs;
+using GameCollectionAPI.DTOs.Games;
 using GameCollectionAPI.Models;
 using GameCollectionAPI.Repositories;
 
