@@ -16,6 +16,11 @@ namespace GameCollectionAPI.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="authDto">Authentication DTO containing user details.</param>
+        /// <returns>The created user.</returns>
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,6 +40,11 @@ namespace GameCollectionAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Logs in a user and returns a JWT token.
+        /// </summary>
+        /// <param name="authDto">Authentication DTO containing user credentials.</param>
+        /// <returns>A JWT token if credentials are valid; Unauthorized otherwise.</returns>
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

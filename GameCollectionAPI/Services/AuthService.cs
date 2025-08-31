@@ -27,6 +27,11 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Logs in a user by validating credentials and generating a JWT token.
+    /// </summary>
+    /// <param name="authDto">The authentication data.</param>
+    /// <returns>A task containing the JWT token string.</returns>
     public async Task<string> LoginUserAsync(AuthDto authDto)
     {
         var user = await _userRepository.GetByUsernameAsync(authDto.Username);
@@ -45,6 +50,11 @@ public class AuthService : IAuthService
         return token;
     }
 
+    /// <summary>
+    /// Registers a new user and returns the created user's read DTO.
+    /// </summary>
+    /// <param name="authDto">The authentication data.</param>
+    /// <returns>A task containing the created user's read DTO.</returns>
     public async Task<UserReadDto> RegisterUserAsync(AuthDto authDto)
     {
         if (await _userRepository.GetByUsernameAsync(authDto.Username) != null)
@@ -63,6 +73,11 @@ public class AuthService : IAuthService
         return user.ToReadDto();
     }
 
+    /// <summary>
+    /// Generates a JWT token for the specified user.
+    /// </summary>
+    /// <param name="user">The user entity.</param>
+    /// <returns>A JWT token as a string.</returns>
     private string GenerateJwtToken(User user)
     {
         // Define as informações do usuário (claims) no token

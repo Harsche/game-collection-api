@@ -16,6 +16,11 @@ namespace GameCollectionAPI.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Gets a user by its ID.
+        /// </summary>
+        /// <param name="id">User's ID.</param>
+        /// <returns>The user if found, otherwise NotFound.</returns>
         [HttpGet("{id:int}", Name = "GetUserById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +34,11 @@ namespace GameCollectionAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="createdUser">The user creation DTO.</param>
+        /// <returns>The created user.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -48,6 +58,12 @@ namespace GameCollectionAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the username of an existing user.
+        /// </summary>
+        /// <param name="id">User's ID.</param>
+        /// <param name="updateUsernameDto">DTO with updated username.</param>
+        /// <returns>No content if successful; NotFound if user does not exist.</returns>
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -68,6 +84,11 @@ namespace GameCollectionAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a user.
+        /// </summary>
+        /// <param name="id">User's ID.</param>
+        /// <returns>No content if deleted; NotFound if user does not exist.</returns>
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
