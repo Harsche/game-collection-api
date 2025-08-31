@@ -27,12 +27,12 @@ public class UserRepository : IUserRepository
 
     public Task<User?> GetByIdAsync(int id)
     {
-        return _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+        return _context.Users.Include(u => u.Role).FirstOrDefaultAsync(user => user.Id == id);
     }
 
     public Task<User?> GetByUsernameAsync(string username)
     {
-        return _context.Users.FirstOrDefaultAsync(user => user.Username == username);
+        return _context.Users.Include(u => u.Role).FirstOrDefaultAsync(user => user.Username == username);
     }
 
     public Task UpdateAsync()

@@ -8,5 +8,6 @@ public class UserCreateDto
     [StringLength(20, MinimumLength = 1)]
     public required string Username { get; set; }
 
+    [Required]
     public required string Password { get; set; }
 }

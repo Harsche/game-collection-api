@@ -10,12 +10,16 @@ public class User
     public string? PasswordHash { get; set; }
     public DateTime CreatedDate { get; set; }
 
+    public required int RoleId { get; set; }
+    public Role? Role { get; set; }
+
     public static User FromCreateDto(UserCreateDto createDto)
     {
         var user = new User
         {
             Username = createDto.Username,
-            CreatedDate = DateTime.UtcNow
+            CreatedDate = DateTime.UtcNow,
+            RoleId = (int)RoleType.User
         };
 
         var passwordHasher = new PasswordHasher<User>();
