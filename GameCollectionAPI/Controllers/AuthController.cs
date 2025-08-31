@@ -47,7 +47,6 @@ namespace GameCollectionAPI.Controllers
         /// <returns>A JWT token if credentials are valid; Unauthorized otherwise.</returns>
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] AuthDto authDto)
         {
@@ -58,9 +57,9 @@ namespace GameCollectionAPI.Controllers
                 var token = await _authService.LoginUserAsync(authDto);
                 return Ok(new { jwt = token });
             }
-            catch (InvalidDataException ex)
+            catch (InvalidDataException)
             {
-                return Unauthorized(new { message = ex.Message });
+                return Unauthorized(new { message = "Invalid credentials" });
             }
         }
     }

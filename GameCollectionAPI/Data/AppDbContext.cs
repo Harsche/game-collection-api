@@ -20,16 +20,19 @@ public class AppDbContext : DbContext
         );
 
         // Add admin user
-        var adminUser = User.FromCreateDto(
-            new DTOs.Users.UserCreateDto
-            {
-                Username = "Admin",
-                Password = "admin",
-            }
-        );
-        adminUser.Id = -1;
-        adminUser.CreatedDate = new DateTime(0);
-        adminUser.RoleId = (int)RoleType.Admin;
-        modelBuilder.Entity<User>().HasData(adminUser);
+        if (!Users.Any(user => user.Id == -1)) // Assure default admin with ID -1 is created
+        {
+            var adminUser = User.FromCreateDto(
+                new DTOs.Users.UserCreateDto
+                {
+                    Username = "Admin",
+                    Password = "admin",
+                }
+            );
+            adminUser.Id = -1;
+            adminUser.CreatedDate = DateTime.UtcNow;
+            adminUser.RoleId = (int)RoleType.Admin;
+            modelBuilder.Entity<User>().HasData(adminUser);
+        }
     }
 }

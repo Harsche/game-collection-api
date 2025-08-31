@@ -95,7 +95,7 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            if (id == 0 || id == -1) { return BadRequest(); }
+            if (id == 0 || id == -1) { return BadRequest(); } // Default admin (with ID -1) can't be deleted
 
             bool successful = await _service.DeleteUserAsync(id);
             return successful ? NoContent() : NotFound();

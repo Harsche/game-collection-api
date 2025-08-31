@@ -37,7 +37,7 @@ public class AuthService : IAuthService
         var user = await _userRepository.GetByUsernameAsync(authDto.Username);
         if (user == null)
         {
-            throw new InvalidDataException("User with this username does not exists.");
+            throw new InvalidDataException("User with this username does not exist.");
         }
 
         var passwordHasher = new PasswordHasher<User>();
@@ -80,7 +80,6 @@ public class AuthService : IAuthService
     /// <returns>A JWT token as a string.</returns>
     private string GenerateJwtToken(User user)
     {
-        // Define as informações do usuário (claims) no token
         var claims = new List<Claim>
         {
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -91,6 +90,11 @@ public class AuthService : IAuthService
         // Signing key
         var jwtConfigurations = _configuration.GetSection("Jwt");
         var tokenSecret = jwtConfigurations["Key"];
+        if (string.IsNullOrWhiteSpace(tokenSecret))
+        {
+            // TODO - Log warning!
+            throw new InvalidOperationException("JWT secret key is missing in the app configuration.");
+        }
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(tokenSecret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
