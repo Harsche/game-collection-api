@@ -1,5 +1,6 @@
 using GameCollectionAPI.DTOs.Games;
 using GameCollectionAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameCollectionAPI.Controllers
@@ -46,6 +47,7 @@ namespace GameCollectionAPI.Controllers
         /// <param name="createdGame">Game object to add.</param>
         /// <returns>The created game.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] GameCreateDto createdGame)

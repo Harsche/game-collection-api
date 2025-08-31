@@ -16,13 +16,13 @@ namespace GameCollectionAPI.Controllers
             _service = service;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetUserById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
-            if (id <= 0) { return BadRequest(); }
+            if (id == 0) { return BadRequest(); }
 
             var user = await _service.GetUserByIdAsync(id);
             return user == null ? NotFound() : Ok(user);
@@ -40,7 +40,7 @@ namespace GameCollectionAPI.Controllers
             try
             {
                 var user = await _service.CreateUserAsync(createdUser);
-                return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+                return CreatedAtAction("GetUserById", new { id = user.Id }, user);
             }
             catch (DuplicateUsernameException ex)
             {
@@ -55,7 +55,7 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateUsername(int id, [FromBody] UpdateUsernameDto updateUsernameDto)
         {
-            if (id <= 0 || updateUsernameDto == null) { return BadRequest(); }
+            if (id == 0 || updateUsernameDto == null) { return BadRequest(); }
 
             try
             {
@@ -74,7 +74,7 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            if (id <= 0) { return BadRequest(); }
+            if (id == 0 || id == -1) { return BadRequest(); }
 
             bool successful = await _service.DeleteUserAsync(id);
             return successful ? NoContent() : NotFound();
