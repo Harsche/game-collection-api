@@ -1,4 +1,4 @@
-using GameCollectionAPI.DTOs;
+using GameCollectionAPI.DTOs.Games;
 using GameCollectionAPI.Models;
 using GameCollectionAPI.Repositories;
 
@@ -17,7 +17,7 @@ public class GameService : IGameService
     /// Creates a new game in the collection.
     /// </summary>
     /// <param name="createdGame">The game data to create.</param>
-    /// <returns>The created game with assigned ID.</returns>
+    /// <returns>A task containing the created game's read DTO.</returns>
     public async Task<GameReadDto> CreateGameAsync(GameCreateDto createdGame)
     {
         var game = Game.FromCreateDto(createdGame);
@@ -26,10 +26,10 @@ public class GameService : IGameService
     }
 
     /// <summary>
-    /// Deletes a game from the collection by its ID.
+    /// Deletes a game by ID.
     /// </summary>
-    /// <param name="id">The ID of the game to delete.</param>
-    /// <returns>True if the game was found and deleted; false if not found.</returns>
+    /// <param name="id">The game ID.</param>
+    /// <returns>A task with a boolean indicating whether the deletion was successful.</returns>
     public async Task<bool> DeleteGameAsync(int id)
     {
         var game = await _repo.GetByIdAsync(id);
@@ -46,7 +46,7 @@ public class GameService : IGameService
     /// <summary>
     /// Retrieves all games from the collection.
     /// </summary>
-    /// <returns>A list of all games in the collection.</returns>
+    /// <returns>A task containing a list of all games read DTOs.</returns>
     public async Task<List<GameReadDto>> GetAllGamesAsync()
     {
         var games = await _repo.GetAllAsync();
@@ -56,8 +56,8 @@ public class GameService : IGameService
     /// <summary>
     /// Retrieves a specific game by its ID.
     /// </summary>
-    /// <param name="id">The ID of the game to retrieve.</param>
-    /// <returns>The game if found; null if not found.</returns>
+    /// <param name="id">The game ID.</param>
+    /// <returns>A task containing the game's read DTO if found; otherwise, null.</returns>
     public async Task<GameReadDto?> GetGameByIdAsync(int id)
     {
         var game = await _repo.GetByIdAsync(id);
@@ -73,9 +73,9 @@ public class GameService : IGameService
     /// <summary>
     /// Updates an existing game with new data.
     /// </summary>
-    /// <param name="id">The ID of the game to update.</param>
+    /// <param name="id">The game ID.</param>
     /// <param name="updatedGame">The updated game data.</param>
-    /// <returns>True if the game was found and updated; false if not found.</returns>
+    /// <returns>A task with a boolean indicating whether the update was successful.</returns>
     public async Task<bool> UpdateGameAsync(int id, GameCreateDto updatedGame)
     {
         var game = await _repo.GetByIdAsync(id);

@@ -1,4 +1,4 @@
-namespace GameCollectionAPI.DTOs;
+namespace GameCollectionAPI.DTOs.Games;
 
 public class GameReadDto
 {
