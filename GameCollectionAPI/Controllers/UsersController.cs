@@ -33,12 +33,13 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Get(int id)
         {
+            if (id <= 0 && id != -1) { return BadRequest(); }
+
             if (!IsOwnerOrAdmin(id))
             {
                 return Forbid();
             }
 
-            if (id == 0) { return BadRequest(); }
 
             var user = await _service.GetUserByIdAsync(id);
             return user == null ? NotFound() : Ok(user);
@@ -87,12 +88,12 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateUsername(int id, [FromBody] UpdateUsernameDto updateUsernameDto)
         {
+            if ((id <= 0 && id != -1) || updateUsernameDto == null) { return BadRequest(); };
+
             if (!IsOwnerOrAdmin(id))
             {
                 return Forbid();
             }
-
-            if (id == 0 || updateUsernameDto == null) { return BadRequest(); }
 
             try
             {
