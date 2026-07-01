@@ -52,3 +52,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Database files
+**/**.db
+**/**.db-shm
+**/**.db-wal
+
+# Repomix
+.repomix/

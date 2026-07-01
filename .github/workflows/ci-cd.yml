@@ -66,8 +66,10 @@ jobs:
             docker rm game-collection-api || true
 
             # Run the new container
-            # IMPORTANT: Change '8080:80' to map your desired host port to the container's port.
             docker run -d \
               --name game-collection-api \
               -p 8080:8080 \
+              -e ASPNETCORE_ENVIRONMENT=Production \
+              -e "Jwt__Key=${{ secrets.JWT_SECRET_KEY }}" \
+              -e "DefaultAdminPassword=${{ secrets.DEFAULT_ADMIN_PASSWORD }}" \
               ghcr.io/harsche/game-collection-api:latest
