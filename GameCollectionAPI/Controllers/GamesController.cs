@@ -7,6 +7,7 @@ namespace GameCollectionAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GamesController : ControllerBase
     {
         private readonly IGameService _service;
@@ -22,6 +23,7 @@ namespace GameCollectionAPI.Controllers
         /// <returns>List of games.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IEnumerable<GameReadDto>> Get() => await _service.GetAllGamesAsync();
 
         /// <summary>
@@ -29,9 +31,10 @@ namespace GameCollectionAPI.Controllers
         /// </summary>
         /// <param name="id">Game ID.</param>
         /// <returns>The requested game.</returns>
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetGameById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
@@ -50,13 +53,15 @@ namespace GameCollectionAPI.Controllers
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Post([FromBody] GameCreateDto createdGame)
         {
             if (createdGame == null) { return BadRequest(); }
 
             var game = await _service.CreateGameAsync(createdGame);
 
-            return CreatedAtAction(nameof(Get), new { id = game.Id }, game);
+            return CreatedAtRoute("GetGameById", new { id = game.Id }, game);
         }
 
         /// <summary>
@@ -66,8 +71,11 @@ namespace GameCollectionAPI.Controllers
         /// <param name="updatedGame">Updated game object.</param>
         /// <returns>No content.</returns>
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(int id, [FromBody] GameCreateDto updatedGame)
         {
@@ -83,8 +91,11 @@ namespace GameCollectionAPI.Controllers
         /// <param name="id">Game ID.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {

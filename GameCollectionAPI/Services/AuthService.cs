@@ -99,7 +99,7 @@ public class AuthService : IAuthService
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         // Expiration
-        var expires = DateTime.Now.AddHours(1);
+        var expires = DateTime.UtcNow.AddHours(1);
 
         // Create token
         var token = new JwtSecurityToken(
