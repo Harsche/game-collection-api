@@ -13,6 +13,11 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Add unique index for Username
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+
         // Add roles
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = (int)RoleType.Admin, Name = RoleType.Admin.ToString() },

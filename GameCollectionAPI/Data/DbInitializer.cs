@@ -18,12 +18,12 @@ public static class DbInitializer
         await context.Database.MigrateAsync();
 
         // Seed admin user
-        if (!await context.Users.AnyAsync(u => u.RoleId == (int)RoleType.Admin))
-        {
-            var configuration = services.GetRequiredService<IConfiguration>();
-            var adminUsername = configuration["DefaultAdminUsername"] ?? "Admin";
-            var adminPassword = configuration["DefaultAdminPassword"];
+        var configuration = services.GetRequiredService<IConfiguration>();
+        var adminUsername = configuration["DefaultAdminUsername"] ?? "Admin";
 
+        if (!await context.Users.AnyAsync(u => u.Username == adminUsername))
+        {
+            var adminPassword = configuration["DefaultAdminPassword"];
             if (adminPassword == null)
             {
                 throw new Exception("Default admin password not provided.");
@@ -41,7 +41,18 @@ public static class DbInitializer
             adminUser.PasswordHash = hasher.HashPassword(adminUser, adminPassword);
 
             context.Users.Add(adminUser);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                context.Entry(adminUser).State = EntityState.Detached;
+                if (!await context.Users.AnyAsync(u => u.Username == adminUsername))
+                {
+                    throw;
+                }
+            }
         }
     }
 }
