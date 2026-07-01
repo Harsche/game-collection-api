@@ -1,12 +1,15 @@
+using System.Security.Claims;
 using GameCollectionAPI.DTOs.Users;
 using GameCollectionAPI.Exceptions;
 using GameCollectionAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameCollectionAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _service;
@@ -27,6 +30,11 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
+            if (!IsOwnerOrAdmin(id))
+            {
+                return Forbid();
+            }
+
             if (id == 0) { return BadRequest(); }
 
             var user = await _service.GetUserByIdAsync(id);
@@ -40,6 +48,7 @@ namespace GameCollectionAPI.Controllers
         /// <param name="createdUser">The user creation DTO.</param>
         /// <returns>The created user.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -71,6 +80,11 @@ namespace GameCollectionAPI.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateUsername(int id, [FromBody] UpdateUsernameDto updateUsernameDto)
         {
+            if (!IsOwnerOrAdmin(id))
+            {
+                return Forbid();
+            }
+
             if (id == 0 || updateUsernameDto == null) { return BadRequest(); }
 
             try
@@ -90,6 +104,7 @@ namespace GameCollectionAPI.Controllers
         /// <param name="id">User's ID.</param>
         /// <returns>No content if deleted; NotFound if user does not exist.</returns>
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,6 +114,16 @@ namespace GameCollectionAPI.Controllers
 
             bool successful = await _service.DeleteUserAsync(id);
             return successful ? NoContent() : NotFound();
+        }
+
+        bool IsOwnerOrAdmin(int id)
+        {
+            var currentUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            bool isOwner = currentUserIdClaim == id.ToString();
+            bool isAdmin = User.IsInRole("Admin");
+
+            return isOwner || isAdmin;
         }
     }
 }
