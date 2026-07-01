@@ -18,6 +18,13 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.Username)
             .IsUnique();
 
+        // Configure User-Role relationship to prevent cascade delete
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Role)
+            .WithMany()
+            .HasForeignKey(u => u.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // Add roles
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = (int)RoleType.Admin, Name = RoleType.Admin.ToString() },

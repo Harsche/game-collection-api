@@ -113,7 +113,7 @@ namespace GameCollectionAPI.Migrations
                     b.HasOne("GameCollectionAPI.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");
