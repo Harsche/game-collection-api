@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -56,11 +56,6 @@ namespace GameCollectionAPI.Migrations
                     { 1, "Admin" },
                     { 2, "User" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "CreatedDate", "PasswordHash", "RoleId", "Username" },
-                values: new object[] { -1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "AQAAAAIAAYagAAAAEK1L5Fzxzxrba0kq9JHNqrHPo5Nv/dlL2zitQkEg5nCnVT1eecOwJzGj9q/C+Ho06Q==", 1, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
