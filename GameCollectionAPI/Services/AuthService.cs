@@ -41,7 +41,7 @@ public class AuthService : IAuthService
         }
 
         var passwordHasher = new PasswordHasher<User>();
-        if (user.PasswordHash == null || passwordHasher.VerifyHashedPassword(user, user.PasswordHash, authDto.Password) != PasswordVerificationResult.Success)
+        if (user.PasswordHash == null || passwordHasher.VerifyHashedPassword(user, user.PasswordHash, authDto.Password) == PasswordVerificationResult.Failed)
         {
             throw new InvalidDataException("Invalid password.");
         }
