@@ -62,10 +62,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    app.UseHttpsRedirection();
-}
+// else // TODO- Uncomment when HTTPS is setup
+// {
+//     app.UseHttpsRedirection();
+// }
 
 app.UseAuthentication();
 app.UseAuthorization();
