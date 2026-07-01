@@ -11,6 +11,7 @@ RUN dotnet publish -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+RUN chown -R $APP_UID:$APP_UID /app
 USER $APP_UID
 ENTRYPOINT ["dotnet", "GameCollectionAPI.dll"]
 
