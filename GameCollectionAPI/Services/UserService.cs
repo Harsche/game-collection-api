@@ -68,16 +68,23 @@ public class UserService : IUserService
     /// <returns>A task with a boolean indicating whether the update was successful.</returns>
     public async Task<bool> UpdateUsernameAsync(int id, UpdateUsernameDto updateUsernameDto)
     {
-        if (await _repo.GetByUsernameAsync(updateUsernameDto.NewUsername) != null)
-        {
-            throw new DuplicateUsernameException();
-        }
-
         var user = await _repo.GetByIdAsync(id);
 
         if (user == null)
         {
             return false;
+        }
+
+        var existingUser = await _repo.GetByUsernameAsync(updateUsernameDto.NewUsername);
+
+        if (existingUser != null && existingUser.Id != user.Id)
+        {
+            throw new DuplicateUsernameException();
+        }
+
+        if (user.Username == updateUsernameDto.NewUsername)
+        {
+            return true;
         }
 
         user.Username = updateUsernameDto.NewUsername;
