@@ -65,7 +65,7 @@ namespace GameCollectionAPI.Controllers
             try
             {
                 var user = await _service.CreateUserAsync(createdUser);
-                return CreatedAtAction("GetUserById", new { id = user.Id }, user);
+                return CreatedAtRoute("GetUserById", new { id = user.Id }, user);
             }
             catch (DuplicateUsernameException ex)
             {
