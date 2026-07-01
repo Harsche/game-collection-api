@@ -1,0 +1,10 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        
+        {
+            "text": "Use max 50 characters for commit messages and cover the main changes. Descriptions can be longer. Descriptions should provide additional context and details about the changes made and must be clear and concise and formatted as a bullet list."
+
+            
+        }
+    ]
+}
